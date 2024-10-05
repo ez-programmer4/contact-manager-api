@@ -1,17 +1,30 @@
 const express = require("express");
-const cors = require("cors"); // Import CORS
+const cors = require("cors");
 const errorHandler = require("./middleware/errorHandler");
 const connectDb = require("./config/dbConnection");
 const dotenv = require("dotenv").config();
 
+// Connect to the database
 connectDb();
 
 const app = express();
 
-// Enable CORS for all routes
-app.use(cors()); // Add this line to enable CORS
+// Define allowed origins
+const allowedOrigins = ["https://contact-manager-qwyz.onrender.com"];
 
-const port = process.env.PORT || 3001;
+// Enable CORS with specific origin and additional configuration
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow these methods
+    credentials: true, // Allow credentials
+  })
+);
+
+// Preflight response for all routes
+app.options("*", cors());
+
+// Middleware to parse JSON
 app.use(express.json());
 
 // Route definitions
@@ -26,6 +39,8 @@ app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
+// Start the server
+const port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
