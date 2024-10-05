@@ -11,19 +11,19 @@ const app = express();
 // Define allowed origins
 const allowedOrigins = ["https://contact-manager-qwyz.onrender.com"];
 
-// Enable CORS with specific origin and additional configuration
+// Enable CORS with specific origin and additional options
 app.use(
   cors({
     origin: allowedOrigins,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow these methods
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow methods
     credentials: true, // Allow credentials
   })
 );
 
-// Preflight response for all routes
+// Handle preflight requests
 app.options("*", cors());
 
-// Middleware to parse JSON
+const port = process.env.PORT || 3001;
 app.use(express.json());
 
 // Route definitions
@@ -38,8 +38,6 @@ app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-// Start the server
-const port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
