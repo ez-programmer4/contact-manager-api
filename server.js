@@ -9,7 +9,7 @@ connectDb();
 const app = express();
 
 // Define allowed origins
-const allowedOrigins = ["https://contact-manager-qwyz.onrender.com"];
+const allowedOrigins = ["https://contact-manager-api-u2qo.onrender.com"];
 
 // Enable CORS with specific origin and additional options
 app.use(
