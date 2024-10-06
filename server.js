@@ -16,7 +16,8 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
 // Enable CORS with specific origin and additional options
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin:
+      allowedOrigins.length > 0 ? allowedOrigins : ["http://localhost:3000"], // Allow local origin
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   })
@@ -25,7 +26,7 @@ app.use(
 // Handle preflight requests
 app.options("*", cors());
 
-const port = process.env.PORT || 3000; // Use the port defined in the environment variable
+const port = process.env.PORT || 3001; // Use the port defined in the environment variable
 app.use(express.json());
 
 // Route definitions
