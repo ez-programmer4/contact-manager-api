@@ -13,18 +13,25 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",")
   : [];
 
-// Enable CORS with specific origin and additional options
-app.use(
-  cors({
-    origin:
-      allowedOrigins.length > 0 ? allowedOrigins : ["http://localhost:3000"], // Allow local origin
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true,
-  })
-);
+// CORS options
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      // Allow if the origin is in the list or it's not provided (like with curl or Postman)
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+};
 
-// Handle preflight requests
-app.options("*", cors());
+// Enable CORS
+app.use(cors(corsOptions));
+
+// Handle preflight requests globally
+app.options("*", cors(corsOptions));
 
 const port = process.env.PORT || 3001; // Use the port defined in the environment variable
 app.use(express.json());
