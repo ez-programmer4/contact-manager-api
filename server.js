@@ -7,7 +7,6 @@ const dotenv = require("dotenv").config();
 connectDb();
 
 const app = express();
-const cors = require("cors");
 
 const allowedOrigins = ["https://contact-manager-qwyz.onrender.com"];
 
