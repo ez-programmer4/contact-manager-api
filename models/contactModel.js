@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+// src/models/contactModel.js
+const mongoose = require("mongoose"); // Import mongoose
 
 const constantSchema = mongoose.Schema(
   {
@@ -7,19 +8,15 @@ const constantSchema = mongoose.Schema(
       ref: "User",
       required: true,
     },
-    name: { type: String, required: [true, "please provide the contact name"] },
-    email: {
-      type: String,
-      required: [true, "please provide the contact email"],
-    },
-    phone: {
-      type: String,
-      required: [true, "please provide the contact phone"],
-    },
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    favorite: { type: Boolean, default: false },
+    group: { type: String }, // New field for grouping contacts
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-module.exports = mongoose.model("Contact", constantSchema);
+const Contact = mongoose.model("Contact", constantSchema); // Create the model
+
+module.exports = Contact; // Export the model

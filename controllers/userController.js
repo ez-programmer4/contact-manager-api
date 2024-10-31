@@ -80,4 +80,24 @@ const currentUser = asyncHandler(async (req, res) => {
   res.json(req.user);
 });
 
-module.exports = { registerUser, loginUser, currentUser };
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const { username, email, password } = req.body;
+  const user = await User.findById(req.user.id);
+
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+
+  user.username = username || user.username;
+  user.email = email || user.email;
+
+  if (password) {
+    user.password = await bcrypt.hash(password, 10);
+  }
+
+  await user.save();
+  res.status(200).json({ message: "Profile updated successfully" });
+});
+
+module.exports = { registerUser, loginUser, currentUser, updateUserProfile };

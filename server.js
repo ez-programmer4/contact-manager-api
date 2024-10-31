@@ -1,26 +1,26 @@
 const express = require("express");
 const cors = require("cors");
-const errorHandler = require("./middleware/errorHandler");
-const connectDb = require("./config/dbConnection");
 const dotenv = require("dotenv").config();
+const connectDb = require("./config/dbConnection");
+const errorHandler = require("./middleware/errorHandler");
 
 connectDb();
-
 const app = express();
 
-const allowedOrigins = ["https://contact-manager-qwyz.onrender.com"];
+// Define allowed origins
+const allowedOrigins = [
+  "https://contact-manager-apii.onrender.com", // Deployed URL
+  "http://localhost:3000", // Local development URL
+];
 
 app.use(
   cors({
     origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true, // If you need to include cookies
+    credentials: true,
   })
 );
 
-// Load allowed origins from environment variables
-
-const port = process.env.PORT || 3001; // Use the port defined in the environment variable
 app.use(express.json());
 
 // Route definitions
@@ -35,8 +35,7 @@ app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-// Start the server
+const port = process.env.PORT || 3001; // Use the port defined in the environment variable
 app.listen(port, "0.0.0.0", () => {
-  // Bind to 0.0.0.0
   console.log(`Server is running on port ${port}`);
 });

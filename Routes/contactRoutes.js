@@ -6,6 +6,9 @@ const {
   createContact,
   updateContact,
   deleteContact,
+  exportContacts,
+  importContacts,
+  upload, // Import the upload middleware
 } = require("../controllers/contactController");
 const validateToken = require("../middleware/validateTokenHandler");
 
@@ -22,5 +25,8 @@ router
   .get(getContact) // Retrieve a specific contact by ID
   .put(updateContact) // Update a specific contact by ID
   .delete(deleteContact); // Delete a specific contact by ID
+
+router.post("/import", upload.single("file"), importContacts); // Use upload middleware
+router.get("/export", exportContacts);
 
 module.exports = router;
