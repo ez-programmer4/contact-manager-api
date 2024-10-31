@@ -7,9 +7,9 @@ const errorHandler = require("./middleware/errorHandler");
 connectDb();
 const app = express();
 
-// Define allowed origins
 const allowedOrigins = [
-  "https://contact-manager-apii.onrender.com", // Deployed URL
+  "https://contact-manager-apii.onrender.com", // Existing deployed URL
+  "https://contact-manager-qwyz.onrender.com", // Add this line for your React app
 ];
 
 app.use(
