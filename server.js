@@ -10,7 +10,6 @@ const app = express();
 // Define allowed origins
 const allowedOrigins = [
   "https://contact-manager-apii.onrender.com", // Deployed URL
-  "http://localhost:3000", // Local development URL
 ];
 
 app.use(
