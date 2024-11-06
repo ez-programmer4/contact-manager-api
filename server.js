@@ -7,11 +7,14 @@ const errorHandler = require("./middleware/errorHandler");
 connectDb();
 const app = express();
 
+// Define allowed origins
 const allowedOrigins = [
+  "http://localhost:3000", // For local development
   "https://contact-manager-apii.onrender.com", // Existing deployed URL
-  "https://contact-manager-qwyz.onrender.com", // Add this line for your React app
+  "https://contact-manager-qwyz.onrender.com", // Deployed React app URL
 ];
 
+// CORS configuration
 app.use(
   cors({
     origin: allowedOrigins,
@@ -20,6 +23,7 @@ app.use(
   })
 );
 
+// Middleware to parse JSON
 app.use(express.json());
 
 // Route definitions
@@ -34,7 +38,8 @@ app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-const port = process.env.PORT || 3001; // Use the port defined in the environment variable
+// Start the server
+const port = process.env.PORT || 3001;
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server is running on port ${port}`);
 });

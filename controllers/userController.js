@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 
+// Register a new user
 const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -44,6 +45,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
+// Login user and return access token
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -62,7 +64,7 @@ const loginUser = asyncHandler(async (req, res) => {
         user: {
           username: user.username,
           email: user.email,
-          id: user.id,
+          id: user._id, // Use user._id instead of user.id
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
@@ -76,19 +78,27 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
+// Get current user details
 const currentUser = asyncHandler(async (req, res) => {
+  // Ensure req.user is populated by middleware (e.g., authentication middleware)
+  if (!req.user) {
+    res.status(401).json({ message: "User not authenticated" });
+    return;
+  }
   res.json(req.user);
 });
 
+// Update user profile
 const updateUserProfile = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
-  const user = await User.findById(req.user.id);
+  const user = await User.findById(req.user.id); // Use req.user.id
 
   if (!user) {
     res.status(404);
     throw new Error("User not found");
   }
 
+  // Update user fields
   user.username = username || user.username;
   user.email = email || user.email;
 

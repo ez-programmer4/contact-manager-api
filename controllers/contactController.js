@@ -24,8 +24,9 @@ const getContact = asyncHandler(async (req, res) => {
 });
 
 // Create a new contact
+// Create a new contact
 const createContact = asyncHandler(async (req, res) => {
-  const { name, email, phone } = req.body;
+  const { name, email, phone, group } = req.body; // Include group in destructuring
   if (!name || !email || !phone) {
     res.status(400);
     throw new Error("All fields are mandatory");
@@ -35,6 +36,7 @@ const createContact = asyncHandler(async (req, res) => {
     name,
     email,
     phone,
+    group: group || "Uncategorized", // Default to "Uncategorized" if no group is provided
     user_id: req.user.id,
   });
   res.status(201).json(contact);
@@ -110,8 +112,28 @@ const importContacts = asyncHandler(async (req, res) => {
 
 // Export contacts to CSV
 const exportContacts = asyncHandler(async (req, res) => {
-  const contacts = await Contact.find({ user_id: req.user.id });
-  const csvData = contacts
+  const { contacts } = req.body; // Expect an array of contact IDs
+  const userId = req.user.id; // Extract user ID from request (ensure authentication middleware is in place)
+
+  if (!contacts || contacts.length === 0) {
+    return res
+      .status(400)
+      .json({ message: "No contacts selected for export." });
+  }
+
+  const foundContacts = await Contact.find({
+    _id: { $in: contacts },
+    user_id: userId, // Ensure the user owns the contacts
+  });
+
+  if (!foundContacts || foundContacts.length === 0) {
+    return res
+      .status(404)
+      .json({ message: "No contacts found for the selected IDs." });
+  }
+
+  // Generate CSV data and send it
+  const csvData = foundContacts
     .map((contact) => `${contact.name},${contact.email},${contact.phone}`)
     .join("\n");
 
@@ -119,7 +141,6 @@ const exportContacts = asyncHandler(async (req, res) => {
   res.attachment("contacts.csv");
   res.send(csvData);
 });
-
 // Exporting the CRUD operations and upload middleware
 module.exports = {
   getContacts,

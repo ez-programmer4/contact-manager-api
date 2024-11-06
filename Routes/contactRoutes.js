@@ -27,6 +27,6 @@ router
   .delete(deleteContact); // Delete a specific contact by ID
 
 router.post("/import", upload.single("file"), importContacts); // Use upload middleware
-router.get("/export", exportContacts);
+router.post("/export", exportContacts);
 
 module.exports = router;

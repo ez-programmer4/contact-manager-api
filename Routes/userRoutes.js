@@ -9,9 +9,16 @@ const validateToken = require("../middleware/validateTokenHandler");
 
 const router = express.Router();
 
-router.post("/register", registerUser); // Ensure this matches the endpoint
+// User registration endpoint
+router.post("/register", registerUser);
+
+// User login endpoint
 router.post("/login", loginUser);
-router.get("/current", currentUser);
+
+// Get current user data
+router.get("/current", validateToken, currentUser); // Ensure this is protected by the token
+
+// Update user profile
 router.put("/profile", validateToken, updateUserProfile);
 
 module.exports = router;
